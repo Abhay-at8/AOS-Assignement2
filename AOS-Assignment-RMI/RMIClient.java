@@ -15,6 +15,17 @@ public class RMIClient {
 		        	if(inp.equals("exit")) {
 	            		break;
 	            	}
+		        	///Testing for content exceding 65K byes
+//	            	String val="1";
+//	            	for (int n = 2; n < 64900; n++) {
+//	            		val+=String.valueOf(n); 
+//	                    
+//	                }
+//	            	if(!inp.equals("store"))
+//	            	{inp+=val;
+//	            	inp = inp.substring(0, Math.min(inp.length(), 64900));
+//	            	System.out.println(inp.length());}
+		        	
 		        	System.out.println(stub.executeCommand(inp)+"\n");  
 					 
 			}

@@ -15,14 +15,14 @@ public class UDPServer {
         socket = new DatagramSocket(port);
     }
  
-    public static void main(String[] args) throws InterruptedException {
+    public void connectServer() throws InterruptedException {
     	
     	int port=5001;
     	System.out.println("Server started on port "+port+"\n");
         try {
-        	UDPServer server = new UDPServer(port);
+        	//UDPServer server = new UDPServer(port);
             //server.loadQuotesFromFile(quoteFile);
-            server.service();
+        	this.service();
         } catch (SocketException ex) {
             System.out.println("Socket error: " + ex.getMessage());
         } catch (IOException ex) {
@@ -32,7 +32,7 @@ public class UDPServer {
  
     private void service() throws IOException, InterruptedException {
         while (true) {
-        	byte[] commandByte = new byte[512];
+        	byte[] commandByte = new byte[65000];
             DatagramPacket request = new DatagramPacket(commandByte, commandByte.length);
             socket.receive(request);
             String command = new String(commandByte, 0, request.getLength());
@@ -67,9 +67,10 @@ public class UDPServer {
 	            // Acquire the semaphore to ensure exclusive access to the store
 	            semaphore.acquire();
 	            // Split the command by space and check if it has two arguments
-	            String[] args = command.split(" ");
+	            String[] args = command.split(" ",3);
 	            if (args.length == 3) {
 	                // Store the key-value pair in the store
+	            	//System.out.println("got put value :"+args[2]);
 	                store.put(args[1], args[2]);
 	                msg="Put operation successful\n";
 	            } else {
@@ -152,6 +153,27 @@ public class UDPServer {
             sb.append(pair.key + " : " + pair.value + "\n");
         }
         msg=sb.toString();
+        
+//        msg="The store contains:\n";
+//        //store.forEach((key, value) -> System.out.println(key + " " + value));	
+//        for (String name: store.keySet()) {
+//            String key = name.toString();
+//            String value = store.get(name).toString();
+//            System.out.println(key + " " + value);
+//            msg+=key + " : " + value + "\n";
+//        }
+        
+        int maxLength=65000;
+        
+        if(msg.length()>maxLength) {
+        	System.out.println("content execeeded 65000 characters");
+        	msg="TRIMMED:"+msg;
+        	msg = msg.substring(0, Math.min(msg.length(), maxLength));
+        	//msg.setLength(maxLength);
+
+        }
+       
+        
 		
 		output(msg,request,socket);
 		

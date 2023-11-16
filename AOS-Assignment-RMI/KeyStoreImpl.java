@@ -48,7 +48,7 @@ public class KeyStoreImpl extends UnicastRemoteObject implements KeyStore {
 	            // Acquire the semaphore to ensure exclusive access to the store
 	            semaphore.acquire();
 	            // Split the command by space and check if it has two arguments
-	            String[] args = command.split(" ");
+	            String[] args = command.split(" ",3);
 	            if (args.length == 3) {
 	                // Store the key-value pair in the store
 	                store.put(args[1], args[2]);
@@ -134,7 +134,15 @@ String msg="Client requested store\n";
         }
         msg=sb.toString();
 		
-		
+        int maxLength=65000;
+        
+        if(msg.length()>maxLength) {
+        	System.out.println("content execeeded 65000 characters");
+        	msg="TRIMMED:"+msg;
+        	msg = msg.substring(0, Math.min(msg.length(), maxLength));
+        	//msg.setLength(maxLength);
+
+        }
 		
 	
 		return msg;
