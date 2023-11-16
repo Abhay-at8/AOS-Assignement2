@@ -1,0 +1,63 @@
+Connected to the server
+Enter your username: abhay1 has connected
+Test Case 1 put
+Expected Put operation successful
+Actual Put operation successful
+Time taken 639400
+
+
+Test Case 2 get
+Expected The value of key is value
+Actual The value of key is value
+Time taken 252100
+
+
+Test Case 3 Delete
+Expected Del operation successful
+Actual Del operation successful
+Time taken 349800
+
+
+Test Case 4 Wrong Key
+Expected The key key does not exist
+Actual The key key does not exist
+Time taken 321400
+
+
+Test Case 5 Empty delete
+Expected The key key_new does not exist
+Actual The key key_new does not exist
+Time taken 274500
+
+
+Test Case 6 incorrect no of arguments
+Expected Del operation requires one argument
+Actual Del operation requires one argument
+Time taken 223100
+
+
+Test Case 7 store
+Expected The store contains:
+key1 : abhay
+key2 : eren
+key3 : reiner
+Actual The store contains:
+key1 : abhay
+key2 : eren
+key3 : reiner
+Time taken 1151700
+
+
+Test Case :1 put: 639400
+
+Test Case :2 get: 252100
+
+Test Case :3 Delete: 349800
+
+Test Case :4 Wrong Key: 321400
+
+Test Case :5 Empty delete: 274500
+
+Test Case :6 incorrect no of arguments: 223100
+
+Test Case :7 store: 1151700

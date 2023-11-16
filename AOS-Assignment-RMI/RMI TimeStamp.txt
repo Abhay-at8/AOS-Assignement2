@@ -1,0 +1,67 @@
+Client Connected
+
+Performing
+
+Test Case 1 put
+Expected Put operation successful
+Actual Put operation successful
+Time taken 685100
+
+
+Test Case 2 get
+Expected The value of key is value
+Actual The value of key is value
+Time taken 346700
+
+
+Test Case 3 Delete
+Expected Del operation successful
+Actual Del operation successful
+Time taken 234100
+
+
+Test Case 4 Wrong Key
+Expected The key key does not exist
+Actual The key key does not exist
+Time taken 198700
+
+
+Test Case 5 Empty delete
+Expected The key key_new does not exist
+Actual The key key_new does not exist
+Time taken 194400
+
+
+Test Case 6 incorrect no of arguments
+Expected Del operation requires one argument
+Actual Del operation requires one argument
+Time taken 233000
+
+
+Test Case 7 store
+Expected The store contains:
+key1 : abhay
+key2 : eren
+key3 : reiner
+Actual The store contains:
+key1 : abhay
+key2 : eren
+key3 : reiner
+Time taken 859400
+
+
+Test Case :1 put: 685100
+
+Test Case :2 get: 346700
+
+Test Case :3 Delete: 234100
+
+Test Case :4 Wrong Key: 198700
+
+Test Case :5 Empty delete: 194400
+
+Test Case :6 incorrect no of arguments: 233000
+
+Test Case :7 store: 859400
+
+Client Disconnected
