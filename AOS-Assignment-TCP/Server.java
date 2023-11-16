@@ -16,7 +16,6 @@ class Pair {
 
 // A class to handle the client requests
 class ClientHandler implements Runnable {
-
     private Socket socket; // The socket for communication
     private DataInputStream input; // The input stream
     private DataOutputStream output; // The output stream
@@ -34,8 +33,6 @@ class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-        	
-        	
             // Ask the client for the username
             output.writeUTF("Enter your username: ");
             username = input.readUTF();
@@ -47,10 +44,8 @@ class ClientHandler implements Runnable {
                 // Read the command from the client
                 String command = input.readUTF();
                 // Parse the command and execute it
-                System.out.println("got command "+ command);
                 switch (command.split(" ")[0]) {
                     case "put":
-                    	
                         put(command);
                         break;
                     case "get":
@@ -62,8 +57,6 @@ class ClientHandler implements Runnable {
                     case "store":
                         store();
                         break;
-                    case "check_Mutex":
-                    	check_mutex();
                     case "exit":
                         exit();
                         return;
@@ -71,7 +64,7 @@ class ClientHandler implements Runnable {
                         output.writeUTF("Invalid command\n");
                 }
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             System.out.println(e);
         } finally {
             try {
@@ -85,25 +78,13 @@ class ClientHandler implements Runnable {
         }
     }
 
-    private void check_mutex() {
-		System.out.println("Checking me");
-		
-	}
-
-	// A method to perform a put operation
-    private void put(String command) throws IOException, InterruptedException {
-    	Socket socketME1 = new Socket("192.168.181.1", 5001);
-    	//Thread.sleep(5000);
-    	DataInputStream input1 = new DataInputStream(socketME1.getInputStream());
-        DataOutputStream output1 = new DataOutputStream(socketME1.getOutputStream());
-        output1.writeUTF("check_Mutex");
+    // A method to perform a put operation
+    private void put(String command) throws IOException {
         try {
-        	
-        	
             // Acquire the semaphore to ensure exclusive access to the store
             semaphore.acquire();
             // Split the command by space and check if it has two arguments
-            String[] args = command.split(" ");
+            String[] args = command.split(" ",3);
             if (args.length == 3) {
                 // Store the key-value pair in the store
                 store.put(args[1], args[2]);
@@ -116,7 +97,6 @@ class ClientHandler implements Runnable {
         } finally {
             // Release the semaphore after finishing the operation
             semaphore.release();
-            //socketME1.close();
         }
     }
 
@@ -182,7 +162,17 @@ class ClientHandler implements Runnable {
         for (Pair pair : pairs) {
             sb.append(pair.key + " : " + pair.value + "\n");
         }
-        output.writeUTF(sb.toString());
+        String msg=sb.toString();
+        int maxLength=65000;
+        
+        if(msg.length()>maxLength) {
+        	System.out.println("content execeeded 65000 characters");
+        	msg="TRIMMED:"+msg;
+        	msg = msg.substring(0, Math.min(msg.length(), maxLength));
+        	//msg.setLength(maxLength);
+
+        }
+        output.writeUTF(msg);
     }
 
     // A method to exit the client and server
@@ -209,30 +199,52 @@ class ClientHandler implements Runnable {
 
 // The main class that creates the server socket and accepts the client connections
 public class Server {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        // Create a server socket on port 5000
-        ServerSocket server = new ServerSocket(5000);
-        //ServerSocket server1 = new ServerSocket(50051);
-    	String ip="192.168.181.3";
-    	Thread.sleep(5000);
-//    	Socket socketME = new Socket(ip, 50051);
-//    	Client2 c=new Client2();
-//		c.connectClinet(socketME);
-        System.out.println("Server started on port 5000");
-        // Loop until exit command is received from a client
+	
+    public  void connectServer(int port) throws IOException {
+
+//Code to check servers running on different Ip and connection dynamically    	
+//    	boolean serverRunning= false;
+//    	int port=5000;
+//    	String []ips= {"192.168.181.1","192.168.181.3"};
+//    	for (String ip : ips) {
+//   		try { 
+//    			System.out.println("trying to connect to ip"+ ip);
+//    			Socket socket = new Socket(ip, 5000);
+//    			
+//    			Client c=new Client();
+//    			serverRunning=true;
+//    			c.connectClinet(socket);
+//    			break;
+//    			
+//			} catch (Exception e) {
+//				System.out.println("Cannot connect to "+ip);
+//			}
+//			
+//		}
+    			
+    			
+    			
+    			
+    	//if (!serverRunning) {
+    	//System.out.println("No server available. I ll be server");
+    	
+        // Create a server socket on port passed
+        ServerSocket server = new ServerSocket(port);
+        System.out.println("Server started on port "+port);
+        // Loop until exit command is received from a client and no client is connected
         while (true) {
             // Accept a client connection and create a new thread to handle it
             Socket socket = server.accept();
             System.out.println("A new client is connected: " + socket);
             DataInputStream input = new DataInputStream(socket.getInputStream());
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-//            DataInputStream inputME = new DataInputStream(socketME.getInputStream());
-//            DataOutputStream outputME = new DataOutputStream(socketME.getOutputStream());
-       
             ClientHandler handler = new ClientHandler(socket, input, output);
             Thread thread = new Thread(handler);
             thread.start();
             System.out.println("A new thread is created for the client");
-        }
+        	}
+    	//}
+    	//System.exit(0);
     }
+    
 }

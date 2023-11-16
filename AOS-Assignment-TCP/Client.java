@@ -1,20 +1,17 @@
 import java.io.*;
 import java.net.*;
-import java.util.Random;
 
 // The main class that creates the client socket and communicates with the server
 public class Client {
     // Declare the running variable as a static volatile field of the Client class
     private static volatile boolean running = true;
+    
 
-    public static void main(String[] args) throws IOException {
+    public void connectClinet(Socket socket) throws IOException {
         // Create a socket and connect to the server on localhost and port 5000
-    	String []ips= {"192.168.181.1","192.168.181.3"};
-    	Random rand = new Random();
-    	int randomInt = rand.nextInt(2);
-    	System.out.println("connecting to "+ips[randomInt]);
-        //Socket socket = new Socket(ips[randomInt], 5000);
-    	Socket socket = new Socket("localhost", 5000);
+    	try{
+        //Socket socket = new Socket("localhost", 5000);
+    	
         System.out.println("Connected to the server");
         DataInputStream input = new DataInputStream(socket.getInputStream());
         DataOutputStream output = new DataOutputStream(socket.getOutputStream());
@@ -46,11 +43,22 @@ public class Client {
         while (running) {
             // Read the command from the user and send it to the server
             String command = reader.readLine();
+            String inp=command;
+        	
             output.writeUTF(command);
+            Thread.sleep(10);
         }
+        
         // Close the socket and streams
         socket.close();
         input.close();
         output.close();
     }
+    	 catch(Exception e){
+    		
+    			System.out.println("Exception"+e);
+    			
+    		}
+    }
+   
 }
